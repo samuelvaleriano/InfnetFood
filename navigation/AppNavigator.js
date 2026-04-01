@@ -5,6 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 import HomeScreen from "../screens/HomeScreen";
 import SigninScreen from "../screens/SigninSreen";
+import ProdutosDaCategoriaScreen from "../screens/ProdutosDaCategoriaScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -39,6 +40,16 @@ function MainTabs() {
     );
 }
 
+function DetailsScreen() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
+            <Stack.Screen name="Details" component={ProdutosDaCategoriaScreen} />
+        </Stack.Navigator>
+    )
+}
+
+
 export default function AppNavigator() {
 
     return (
@@ -47,7 +58,7 @@ export default function AppNavigator() {
                 screenOptions={{
                     headerStyle: { backgroundColor: '#890019' },
                     headerTintColor: '#FFF',
-                    headerTitleStyle: { fontWeight: 'bold', fontSize: 24 ,     elevation: 0,  shadowOpacity: 0,   borderBottomWidth: 0,}
+                    headerTitleStyle: { fontWeight: 'bold', fontSize: 24, elevation: 0, shadowOpacity: 0, borderBottomWidth: 0, }
                 }}
             >
                 <Stack.Screen name="InfntFood" component={SigninScreen} />
@@ -56,6 +67,8 @@ export default function AppNavigator() {
                     component={MainTabs}
                     options={{ headerShown: false }}
                 />
+                <Stack.Screen name="ProdutosDaCategoria" component={ProdutosDaCategoriaScreen} options={({ route }) => ({ title: route.params.item.nome })} />
+
             </Stack.Navigator>
         </NavigationContainer>
     );

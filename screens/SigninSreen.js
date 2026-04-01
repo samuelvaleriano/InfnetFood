@@ -13,17 +13,17 @@ export default function SigninScreen({ navigation }) {
   const [inputPassword, setInputPassword] = useState('');
 
 async function handleLogin() {
-  try {
+  // try {
    
-    if (inputEmail === userMock.email && inputPassword === userMock.senha) {
+  //   if (inputEmail === userMock.email && inputPassword === userMock.senha) {
       navigation.navigate('Main');
-    } else {
-      alert('E-mail ou senha incorretos!');
-    }
-  } catch (error) {
-    alert('Erro ao fazer login');
-    console.log(error);
-  }
+  //   } else {
+  //     alert('E-mail ou senha incorretos!');
+  //   }
+  // } catch (error) {
+  //   alert('Erro ao fazer login');
+  //   console.log(error);
+  // }
 }
 
   return (
