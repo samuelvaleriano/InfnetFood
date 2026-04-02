@@ -5,17 +5,18 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import userMock from '../api/usuarioMock/samuelvaleriano@gmail.com.json';
 import { useState } from 'react';
+import { useUser } from '../context/UserContext';
 
 export default function SigninScreen({ navigation }) {
   const [inputEmail, setInputEmail] = useState('');
   const [inputPassword, setInputPassword] = useState('');
+  const { user } = useUser();
 
 async function handleLogin() {
   // try {
    
-  //   if (inputEmail === userMock.email && inputPassword === userMock.senha) {
+  //   if (inputEmail === user.email && inputPassword === user.senha) {
       navigation.navigate('Main');
   //   } else {
   //     alert('E-mail ou senha incorretos!');

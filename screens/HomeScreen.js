@@ -10,6 +10,7 @@ import { Dimensions } from "react-native";
 
 
 
+
 const { width } = Dimensions.get('window');
 const itemWidth = width * 0.6;
 const spacing = 16;

@@ -7,6 +7,7 @@ import HomeScreen from "../screens/HomeScreen";
 import SigninScreen from "../screens/SigninSreen";
 import ProdutosDaCategoriaScreen from "../screens/ProdutosDaCategoriaScreen";
 import CartScreen from '../screens/CardScreen';
+import PerfilScreen from "../screens/PerfilScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -39,6 +40,7 @@ function MainTabs() {
         >
             <Tab.Screen name="HomeTab" component={HomeScreen} />
             <Tab.Screen name="CartTab" component={CartScreen} options={{ title: 'Carrinho' }} />
+            <Tab.Screen name="SigninTab" component={PerfilScreen} options={{ title: 'Perfil' }} />
         </Tab.Navigator>
     );
 }
