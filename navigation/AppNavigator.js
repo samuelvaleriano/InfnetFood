@@ -6,12 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import SigninScreen from "../screens/SigninSreen";
 import ProdutosDaCategoriaScreen from "../screens/ProdutosDaCategoriaScreen";
+import CartScreen from '../screens/CardScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const icons = {
     HomeTab: { active: 'home', inactive: 'home-outline' },
+    CartTab: { active: 'cart', inactive: 'cart-outline' },
     SigninTab: { active: 'person', inactive: 'person-outline' },
 };
 
@@ -36,17 +38,9 @@ function MainTabs() {
             })}
         >
             <Tab.Screen name="HomeTab" component={HomeScreen} />
+            <Tab.Screen name="CartTab" component={CartScreen} options={{ title: 'Carrinho' }} />
         </Tab.Navigator>
     );
-}
-
-function DetailsScreen() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-            <Stack.Screen name="Details" component={ProdutosDaCategoriaScreen} />
-        </Stack.Navigator>
-    )
 }
 
 

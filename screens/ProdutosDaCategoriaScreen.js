@@ -1,29 +1,39 @@
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
+import { useContext } from 'react';
+import ProdutoItem from '../components/ui/ProdutoItem';
+import { CartContext } from '../context/CardContext';
 
 
 const todosOsProdutos = [
     { id: '101', categoriaId: '1', nome: 'X-Burguer Duplo', preco: 'R$ 25,00', imagem: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80' },
     { id: '102', categoriaId: '1', nome: 'Batata Frita M', preco: 'R$ 12,00', imagem: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=500&q=80' },
-    { id: '101', categoriaId: '1', nome: 'X-Burguer Duplo', preco: 'R$ 25,00', imagem: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80' },
-    { id: '102', categoriaId: '1', nome: 'Batata Frita M', preco: 'R$ 12,00', imagem: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=500&q=80' },
+    { id: '103', categoriaId: '1', nome: 'X-Burguer Duplo', preco: 'R$ 25,00', imagem: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80' },
+    { id: '104', categoriaId: '1', nome: 'Batata Frita M', preco: 'R$ 12,00', imagem: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=500&q=80' },
 
-    { id: '103', categoriaId: '6', nome: 'Bolo de Chocolate', preco: 'R$ 18,00', imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80' },
-    { id: '104', categoriaId: '6', nome: 'Pudim de Leite', preco: 'R$ 15,00', imagem: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80' },
-     { id: '103', categoriaId: '6', nome: 'Bolo de Chocolate', preco: 'R$ 18,00', imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80' },
-    { id: '104', categoriaId: '6', nome: 'Pudim de Leite', preco: 'R$ 15,00', imagem: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80' },
+    { id: '105', categoriaId: '6', nome: 'Bolo de Chocolate', preco: 'R$ 18,00', imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80' },
+    { id: '106', categoriaId: '6', nome: 'Pudim de Leite', preco: 'R$ 15,00', imagem: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80' },
+    { id: '107', categoriaId: '6', nome: 'Bolo de Chocolate', preco: 'R$ 18,00', imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80' },
+    { id: '108', categoriaId: '6', nome: 'Pudim de Leite', preco: 'R$ 15,00', imagem: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80' },
 
-    { id: '105', categoriaId: '8', nome: 'Suco de Laranja', preco: 'R$ 10,00', imagem: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=500&q=80' },
-    { id: '106', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
-     { id: '105', categoriaId: '8', nome: 'Suco de Laranja', preco: 'R$ 10,00', imagem: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=500&q=80' },
-    { id: '106', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
+    { id: '109', categoriaId: '8', nome: 'Suco de Laranja', preco: 'R$ 10,00', imagem: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=500&q=80' },
+    { id: '110', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
+    { id: '111', categoriaId: '8', nome: 'Suco de Laranja', preco: 'R$ 10,00', imagem: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=500&q=80' },
+    { id: '112', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
 ];
+
+
+
 
 export default function ProdutosDaCategoriaScreen({ route }) {
     const { item } = route.params;
+const { adicionar, remover, getQuantidade } = useContext(CartContext);
 
     const produtosFiltrados = todosOsProdutos.filter(
         (produto) => produto.categoriaId === item.id
     );
+
+
+
 
     const renderProduto = ({ item: produto }) => (
         <View style={styles.produtoCard}>
@@ -32,10 +42,13 @@ export default function ProdutosDaCategoriaScreen({ route }) {
             <View style={styles.produtoInfo}>
                 <Text style={styles.produtoNome}>{produto.nome}</Text>
                 <Text style={styles.produtoPreco}>{produto.preco}</Text>
-
-                <TouchableOpacity style={[styles.botaoAdicionar, { backgroundColor: item.cor }]}>
-                    <Text style={styles.textoBotaoAdicionar}>Adicionar</Text>
-                </TouchableOpacity>
+                <ProdutoItem 
+                    backGroud={item.cor} 
+                    corBotao={item.corVer} 
+                    quantidade={getQuantidade(produto.id)} 
+                    onAdd={() => adicionar(produto)}       
+                    onRemove={() => remover(produto.id)}   
+                />
             </View>
         </View>
     );
@@ -100,7 +113,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     textoBotaoAdicionar: {
-        color: '#fff',
+        color: '#000',
         fontWeight: 'bold',
     },
     textoVazio: {
