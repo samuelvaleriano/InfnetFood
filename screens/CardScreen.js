@@ -1,10 +1,10 @@
-// screens/CartScreen.js
+
 import React, { useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { CartContext } from '../context/CardContext';
 import { Ionicons } from "@expo/vector-icons";
 
-export default function CartScreen() {
+export default function CartScreen({ navigation }) {
     const { cartItems, adicionar, remover, getTotal } = useContext(CartContext);
 
     const renderCartItem = ({ item }) => (
@@ -37,18 +37,34 @@ export default function CartScreen() {
                     <Text style={styles.textoVazio}>Seu carrinho está vazio.</Text>
                 }
             />
-            <View style={styles.footer}>
-                <Text style={styles.textoTotal}>Total:</Text>
-                <Text style={styles.valorTotal}>
-                    R$ {getTotal().toFixed(2).replace('.', ',')}
-                </Text>
-            </View>
+            {cartItems.length > 0 && (
+                <View style={styles.footerContainer}>
+                    <View style={styles.footer}>
+                        <Text style={styles.textoTotal}>Total:</Text>
+                        <Text style={styles.valorTotal}>
+                            R$ {getTotal().toFixed(2).replace('.', ',')}
+                        </Text>
+                    </View>
+                    
+                    
+                    <TouchableOpacity 
+                        style={styles.botaoCheckout}
+                        onPress={() => navigation.navigate('Checkout', { 
+                            itens: cartItems, 
+                            total: getTotal() 
+                        })}
+                    >
+                        <Text style={styles.textoBotaoCheckout}>Finalizar Compra</Text>
+                    </TouchableOpacity>
+                </View>
+            )}
+
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#f5f5f5' },
+    container: { flex: 1, backgroundColor: '#f5f5f5' ,marginTop: 50},
     cartItem: { flexDirection: 'row', backgroundColor: '#fff', padding: 12, marginBottom: 12, borderRadius: 10, alignItems: 'center' },
     imagem: { width: 60, height: 60, borderRadius: 8 },
     info: { flex: 1, marginLeft: 12 },
@@ -58,7 +74,10 @@ const styles = StyleSheet.create({
     botao: { backgroundColor: '#890019', padding: 4, borderRadius: 12 },
     quantidade: { marginHorizontal: 12, fontSize: 16, fontWeight: 'bold' },
     textoVazio: { textAlign: 'center', marginTop: 40, fontSize: 16, color: '#888' },
-    footer: { flexDirection: 'row', justifyContent: 'space-between', padding: 20, backgroundColor: '#fff', borderTopWidth: 1, borderColor: '#ddd' },
+    footerContainer: { backgroundColor: '#fff', padding: 20, borderTopWidth: 1, borderColor: '#ddd' },
+    footer: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 15 },
     textoTotal: { fontSize: 20, fontWeight: 'bold' },
     valorTotal: { fontSize: 22, fontWeight: 'bold', color: '#890019' },
+    botaoCheckout: { backgroundColor: '#009432', padding: 15, borderRadius: 10, alignItems: 'center' },
+    textoBotaoCheckout: { color: '#fff', fontSize: 18, fontWeight: 'bold' }
 });

@@ -10,6 +10,7 @@ import CartScreen from '../screens/CardScreen';
 import PerfilScreen from "../screens/PerfilScreen";
 import PedidosScreen from "../screens/PedidosScreen";
 import DetalhesRestScreen from "../screens/DetalhesRestScreen";
+import CheckoutScreen from "../screens/CheckoutScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,7 +58,7 @@ export default function AppNavigator() {
                 screenOptions={{
                     headerStyle: { backgroundColor: '#890019' },
                     headerTintColor: '#FFF',
-                    headerTitleStyle: { fontWeight: 'bold', fontSize: 24, elevation: 0, shadowOpacity: 0, borderBottomWidth: 0, }
+                    headerTitleStyle: { fontWeight: 'bold', fontSize: 24, elevation: 0, shadowOpacity: 0, borderBottomWidth: 0 }
                 }}
             >
                 <Stack.Screen name="InfntFood" component={SigninScreen} />
@@ -68,6 +69,11 @@ export default function AppNavigator() {
                 />
                 <Stack.Screen name="ProdutosDaCategoria" component={ProdutosDaCategoriaScreen} options={({ route }) => ({ title: route.params.item.nome })} />
                 <Stack.Screen name="DetalhesRestaurante" component={DetalhesRestScreen} options={{ title: 'Detalhes do Restaurante' }} />
+                <Stack.Screen
+                    name="Checkout"
+                    component={CheckoutScreen}
+                    options={{ title: 'Finalizar Compra' }}
+                />
 
             </Stack.Navigator>
         </NavigationContainer>
