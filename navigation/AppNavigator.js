@@ -9,6 +9,7 @@ import ProdutosDaCategoriaScreen from "../screens/ProdutosDaCategoriaScreen";
 import CartScreen from '../screens/CardScreen';
 import PerfilScreen from "../screens/PerfilScreen";
 import PedidosScreen from "../screens/PedidosScreen";
+import DetalhesRestScreen from "../screens/DetalhesRestScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -66,6 +67,7 @@ export default function AppNavigator() {
                     options={{ headerShown: false }}
                 />
                 <Stack.Screen name="ProdutosDaCategoria" component={ProdutosDaCategoriaScreen} options={({ route }) => ({ title: route.params.item.nome })} />
+                <Stack.Screen name="DetalhesRestaurante" component={DetalhesRestScreen} options={{ title: 'Detalhes do Restaurante' }} />
 
             </Stack.Navigator>
         </NavigationContainer>
