@@ -26,7 +26,7 @@ const todosOsProdutos = [
 
 export default function ProdutosDaCategoriaScreen({ route }) {
     const { item } = route.params;
-const { adicionar, remover, getQuantidade } = useContext(CartContext);
+    const { adicionar, remover, getQuantidade } = useContext(CartContext);
 
     const produtosFiltrados = todosOsProdutos.filter(
         (produto) => produto.categoriaId === item.id
@@ -42,12 +42,12 @@ const { adicionar, remover, getQuantidade } = useContext(CartContext);
             <View style={styles.produtoInfo}>
                 <Text style={styles.produtoNome}>{produto.nome}</Text>
                 <Text style={styles.produtoPreco}>{produto.preco}</Text>
-                <ProdutoItem 
-                    backGroud={item.cor} 
-                    corBotao={item.corVer} 
-                    quantidade={getQuantidade(produto.id)} 
-                    onAdd={() => adicionar(produto)}       
-                    onRemove={() => remover(produto.id)}   
+                <ProdutoItem
+                    backGroud={item.cor}
+                    corBotao={item.corVer}
+                    quantidade={getQuantidade(produto.id)}
+                    onAdd={() => adicionar(produto)}
+                    onRemove={() => remover(produto.id)}
                 />
             </View>
         </View>
