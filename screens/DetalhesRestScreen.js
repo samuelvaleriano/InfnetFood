@@ -1,19 +1,28 @@
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ThemeContext } from '../context/ThemeContext'; 
 
 export default function DetalhesRestScreen({ route, navigation }) {
-  
     const { restaurante } = route.params;
+    
+
+    const { darkMode } = useContext(ThemeContext); 
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.titulo}>{restaurante.nome}</Text>
+   
+        <View style={[styles.container, darkMode && styles.darkContainer]}>
+            <Text style={[styles.titulo, darkMode && styles.darkTitulo]}>
+                {restaurante.nome}
+            </Text>
             
-            <View style={styles.cardInfo}>
-                <Text style={styles.label}>Endereço:</Text>
-                <Text style={styles.texto}>{restaurante.endereco}</Text>
+            <View style={[styles.cardInfo, darkMode && styles.darkCardInfo]}>
+                <Text style={[styles.label, darkMode && styles.darkLabel]}>Endereço:</Text>
+                <Text style={[styles.texto, darkMode && styles.darkTexto]}>{restaurante.endereco}</Text>
                 
-                <Text style={[styles.label, { marginTop: 15 }]}>Exemplo do Cardápio:</Text>
-                <Text style={styles.texto}>{restaurante.prato}</Text>
+                <Text style={[styles.label, darkMode && styles.darkLabel, { marginTop: 15 }]}>
+                    Exemplo do Cardápio:
+                </Text>
+                <Text style={[styles.texto, darkMode && styles.darkTexto]}>{restaurante.prato}</Text>
             </View>
 
             <TouchableOpacity style={styles.botaoVoltar} onPress={() => navigation.goBack()}>
@@ -31,6 +40,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    darkContainer: { backgroundColor: '#121212' },
+    darkCardInfo: { backgroundColor: '#1E1E1E' },
+    darkTitulo: { color: '#FFFFFF' },
+    darkTexto: { color: '#E0E0E0' },
+    darkLabel: { color: '#AAAAAA' },
     titulo: {
         fontSize: 28,
         fontWeight: 'bold',

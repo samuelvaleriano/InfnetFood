@@ -1,3 +1,4 @@
+import React, { useContext } from 'react'; 
 import {
     StyleSheet,
     Text,
@@ -9,9 +10,9 @@ import {
 } from 'react-native';
 import { Dimensions } from "react-native";
 import { WebView } from 'react-native-webview';
-
-
-
+import { useUser } from '../context/UserContext';
+import { ThemeContext } from '../context/ThemeContext'; 
+import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 const itemWidth = width * 0.6;
@@ -25,7 +26,6 @@ const categorias = [
         cor: "#ED1C16",
         corVer: "#BC1611",
     },
-
     {
         id: "6",
         nome: "Sobremesas",
@@ -33,7 +33,6 @@ const categorias = [
         cor: "#FFB8B8",
         corVer: "#FF7B7B",
     },
-
     {
         id: "8",
         nome: "Bebidas",
@@ -42,123 +41,102 @@ const categorias = [
         corVer: "#06752B",
     },
 ];
-const mapHtml = `
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-      <style>
-        body { padding: 0; margin: 0; }
-        #map { width: 100%; height: 100vh; }
-      </style>
-    </head>
-    <body>
-      <div id="map"></div>
- <script>
-        var map = L.map('map').setView([-22.9056, -43.1761], 15);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 19,
-          attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        var locais = [
- { 
-            nome: "🎓 Instituto Infnet", lat: -22.9056, lng: -43.1761, 
-            endereco: "Rua São José, 90 - Centro", 
-            prato: "Não possui (Instituição de Ensino)" 
-          },
-          { 
-            nome: "☕ Confeitaria Colombo", lat: -22.9052, lng: -43.1776, 
-            endereco: "R. Gonçalves Dias, 32 - Centro", 
-            prato: "Pastel de Belém, Coxinha de Galinha e Chá" 
-          },
-          { 
-            nome: "🍲 Bistrô do Ouvidor", lat: -22.9041, lng: -43.1768, 
-            endereco: "R. do Ouvidor, 52 - Centro", 
-            prato: "Estrogonofe de Mignon com Batata Rústica" 
-          },
-          { 
-            nome: "🍺 Bar Luiz", lat: -22.9071, lng: -43.1790, 
-            endereco: "R. da Carioca, 39 - Centro", 
-            prato: "Salsichão com Salada de Batata Alemã" 
-          },
-          { 
-            nome: "🍕 Amarelinho da Cinelândia", lat: -22.9114, lng: -43.1755, 
-            endereco: "Praça Floriano, 55 - Centro", 
-            prato: "Pizza Calabresa e Chopp Gelado" 
-          },
-          { 
-            nome: "🍽️ Lilia Restaurante", lat: -22.9103, lng: -43.1826, 
-            endereco: "R. do Senado, 86 - Centro", 
-            prato: "Menu Degustação Surpresa do Chef (Muda diariamente)" 
-          },
-          { 
-            nome: "🍣 Hachiko Contemporâneo", lat: -22.9030, lng: -43.1747, 
-            endereco: "Tv. do Paço, 10 - Centro", 
-            prato: "Rodízio de Sushi Premium com Ostras" 
-          },
-          { 
-            nome: "🥐 Casa Cave", lat: -22.9050, lng: -43.1781, 
-            endereco: "R. Sete de Setembro, 133 - Centro", 
-            prato: "Mil Folhas de Creme e Café Expresso" 
-          },
-          { 
-            nome: "🥘 Restaurante Mosteiro", lat: -22.8989, lng: -43.1782, 
-            endereco: "R. São Bento, 13 - Centro", 
-            prato: "Bacalhau à Lagareiro com Brócolis e Batatas" 
-          },
-          { 
-            nome: "🍷 Cais do Oriente", lat: -22.8998, lng: -43.1751, 
-            endereco: "R. Visc. de Itaboraí, 8 - Centro", 
-            prato: "Risoto de Camarão com Alho-poró" 
-          },
-          { 
-            nome: "🍛 Rio Minho", lat: -22.9015, lng: -43.1765, 
-            endereco: "R. do Ouvidor, 10 - Centro", 
-            prato: "Sopa de Leão Veloso (Frutos do Mar)" 
-          }
-        ];
-  locais.forEach(function(local) {
-          var marcador = L.marker([local.lat, local.lng])
-            .addTo(map)
-            .bindPopup("<b>" + local.nome + "</b>");
-            
-          // Captura o clique no pino
-          marcador.on('click', function() {
-            // setTimeout garante que o app tenha tempo de processar a mensagem
-            setTimeout(function() {
-                window.ReactNativeWebView.postMessage(JSON.stringify(local));
-            }, 100); 
-          });
-        });
-      </script>
-    </body>
-  </html>
-`;
 
 export default function HomeScreen({ navigation }) {
+    const { user, signOut } = useUser();
+    
+
+    const { darkMode } = useContext(ThemeContext);
+
+
+    const mapHtml = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+          <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+          <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+          <style>
+            body { padding: 0; margin: 0; background-color: ${darkMode ? '#121212' : '#ffffff'}; }
+            #map { width: 100%; height: 100vh; }
+          </style>
+        </head>
+        <body>
+          <div id="map"></div>
+          <script>
+            var map = L.map('map').setView([-22.9056, -43.1761], 15);
+            
+            var tileUrl = '${darkMode ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'}';
+            
+            L.tileLayer(tileUrl, {
+              maxZoom: 19,
+              attribution: '© OpenStreetMap'
+            }).addTo(map);
+
+            var locais = [
+              { nome: "🎓 Instituto Infnet", lat: -22.9056, lng: -43.1761, endereco: "Rua São José, 90 - Centro", prato: "Não possui (Instituição de Ensino)" },
+              { nome: "☕ Confeitaria Colombo", lat: -22.9052, lng: -43.1776, endereco: "R. Gonçalves Dias, 32 - Centro", prato: "Pastel de Belém, Coxinha de Galinha e Chá" },
+              { nome: "🍲 Bistrô do Ouvidor", lat: -22.9041, lng: -43.1768, endereco: "R. do Ouvidor, 52 - Centro", prato: "Estrogonofe de Mignon com Batata Rústica" },
+              { nome: "🍺 Bar Luiz", lat: -22.9071, lng: -43.1790, endereco: "R. da Carioca, 39 - Centro", prato: "Salsichão com Salada de Batata Alemã" },
+              { nome: "🍕 Amarelinho da Cinelândia", lat: -22.9114, lng: -43.1755, endereco: "Praça Floriano, 55 - Centro", prato: "Pizza Calabresa e Chopp Gelado" },
+              { nome: "🍽️ Lilia Restaurante", lat: -22.9103, lng: -43.1826, endereco: "R. do Senado, 86 - Centro", prato: "Menu Degustação Surpresa do Chef (Muda diariamente)" },
+              { nome: "🍣 Hachiko Contemporâneo", lat: -22.9030, lng: -43.1747, endereco: "Tv. do Paço, 10 - Centro", prato: "Rodízio de Sushi Premium com Ostras" },
+              { nome: "🥐 Casa Cave", lat: -22.9050, lng: -43.1781, endereco: "R. Sete de Setembro, 133 - Centro", prato: "Mil Folhas de Creme e Café Expresso" },
+              { nome: "🥘 Restaurante Mosteiro", lat: -22.8989, lng: -43.1782, endereco: "R. São Bento, 13 - Centro", prato: "Bacalhau à Lagareiro com Brócolis e Batatas" },
+              { nome: "🍷 Cais do Oriente", lat: -22.8998, lng: -43.1751, endereco: "R. Visc. de Itaboraí, 8 - Centro", prato: "Risoto de Camarão com Alho-poró" },
+              { nome: "🍛 Rio Minho", lat: -22.9015, lng: -43.1765, endereco: "R. do Ouvidor, 10 - Centro", prato: "Sopa de Leão Veloso (Frutos do Mar)" }
+            ];
+            
+            locais.forEach(function(local) {
+              var marcador = L.marker([local.lat, local.lng])
+                .addTo(map)
+                .bindPopup("<b style='color:#000'>" + local.nome + "</b>");
+                
+              marcador.on('click', function() {
+                setTimeout(function() {
+                    window.ReactNativeWebView.postMessage(JSON.stringify(local));
+                }, 100); 
+              });
+            });
+          </script>
+        </body>
+      </html>
+    `;
 
     const renderItem = ({ item }) => (
-
         <TouchableOpacity style={{ height: 200, justifyContent: 'center', backgroundColor: item.cor, borderRadius: 15, marginRight: 20 }} onPress={() => navigation.navigate('ProdutosDaCategoria', { item })}>
             <View style={styles.card}>
                 <Image source={{ uri: item.imagem }} style={styles.imagemCatalogo} />
                 <View style={{ alignItems: 'center', width: 160, height: 200, justifyContent: 'space-evenly', padding: 10 }}>
                     <Text style={[styles.paragraphCatalogo]}>{item.nome}</Text>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.navigate('ProdutosDaCategoria', { item })}>
                         <Text style={[styles.botaoVerMais, { backgroundColor: item.corVer }]}>Ver mais</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         </TouchableOpacity>
-
     );
 
     return (
-        <View style={styles.container}>
+
+        <View style={[styles.container, darkMode && styles.darkContainer]}>
+            <View style={styles.headerContainer}>
+                <View style={styles.userInfo}>
+                    <Image
+                        source={{ uri: user?.avatar }}
+                        style={styles.avatar}
+                    />
+                    <View>
+                        <Text style={styles.greeting}>Bem-vindo(a),</Text>
+                        <Text style={styles.userName}>{user?.nome}</Text>
+                    </View>
+                </View>
+
+                <TouchableOpacity style={styles.logoutButton} onPress={signOut}>
+                    <Ionicons name="log-out-outline" size={24} color="#FFF" />
+                </TouchableOpacity>
+            </View>
+            
             <Text style={styles.paragraph}>Categories</Text>
 
             <FlatList
@@ -177,12 +155,14 @@ export default function HomeScreen({ navigation }) {
                     paddingVertical: 10,
                 }}
             />
-            <Text style={styles.paragraphMap}>Restaurantes próximos de Você</Text>
+            
+            <Text style={[styles.paragraphMap, darkMode && styles.darkText]}>Restaurantes próximos de Você</Text>
+            
             <View style={styles.mapContainer}>
                 {Platform.OS === 'web' ? (
                     <iframe
                         srcDoc={mapHtml}
-                        style={{ width: '100%', height: '100%', border: 'none' }}
+                        style={{ width: '100%', height: 400, border: 'none', marginBottom: 20, borderRadius: 15 }}
                     />
                 ) : (
                     <WebView
@@ -195,9 +175,7 @@ export default function HomeScreen({ navigation }) {
                         onMessage={(event) => {
                             try {
                                 console.log("✅ Mensagem recebida do mapa: ", event.nativeEvent.data);
-
                                 const dadosDoRestaurante = JSON.parse(event.nativeEvent.data);
-
                                 navigation.navigate('DetalhesRestaurante', { restaurante: dadosDoRestaurante });
                             } catch (error) {
                                 console.error("❌ Erro ao ler os dados do restaurante: ", error);
@@ -206,12 +184,6 @@ export default function HomeScreen({ navigation }) {
                     />
                 )}
             </View>
-            <TouchableOpacity style={styles.botao}
-                onPress={() => navigation.goBack()}
-            >
-                <Text style={styles.textoBotao}>Go Back</Text>
-            </TouchableOpacity>
-
         </View>
     )
 }
@@ -219,10 +191,16 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 50,
+        marginTop: 50, 
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    darkContainer: {
+        backgroundColor: '#121212',
+    },
+    darkText: {
+        color: '#FFFFFF',
     },
     imagemCatalogo: {
         width: 100, height: 100, borderRadius: 50,
@@ -292,5 +270,49 @@ const styles = StyleSheet.create({
     map: {
         flex: 1,
         width: '100%',
+    },
+    headerContainer: {
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        backgroundColor: '#890019',
+        paddingHorizontal: 20,
+        paddingTop: 50,
+        paddingBottom: 20,
+        borderBottomLeftRadius: 25,
+        borderBottomRightRadius: 25,
+        elevation: 8,
+        shadowColor: '#000',
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 3 },
+        shadowRadius: 5,
+    },
+    userInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    greeting: {
+        color: '#f2f2eb',
+        fontSize: 14,
+    },
+    userName: {
+        color: '#FFF',
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    logoutButton: {
+        padding: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
+        borderRadius: 12,
+    },
+    avatar: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        borderWidth: 4,
+        borderColor: '#2E8B57',
+        marginBottom: 16,
+        marginRight: 15,
     },
 });

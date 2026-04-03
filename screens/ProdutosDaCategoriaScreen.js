@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react
 import { useContext } from 'react';
 import ProdutoItem from '../components/ui/ProdutoItem';
 import { CartContext } from '../context/CardContext';
-
+import { ThemeContext } from '../context/ThemeContext';
 
 const todosOsProdutos = [
     { id: '101', categoriaId: '1', nome: 'X-Burguer Duplo', preco: 'R$ 25,00', imagem: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80' },
@@ -21,26 +21,22 @@ const todosOsProdutos = [
     { id: '112', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
 ];
 
-
-
-
 export default function ProdutosDaCategoriaScreen({ route }) {
     const { item } = route.params;
     const { adicionar, remover, getQuantidade } = useContext(CartContext);
+    
+    const { darkMode } = useContext(ThemeContext); 
 
     const produtosFiltrados = todosOsProdutos.filter(
         (produto) => produto.categoriaId === item.id
     );
 
-
-
-
     const renderProduto = ({ item: produto }) => (
-        <View style={styles.produtoCard}>
+        <View style={[styles.produtoCard, darkMode && styles.darkProdutoCard]}>
             <Image source={{ uri: produto.imagem }} style={styles.produtoImagem} />
 
             <View style={styles.produtoInfo}>
-                <Text style={styles.produtoNome}>{produto.nome}</Text>
+                <Text style={[styles.produtoNome, darkMode && styles.darkText]}>{produto.nome}</Text>
                 <Text style={styles.produtoPreco}>{produto.preco}</Text>
                 <ProdutoItem
                     backGroud={item.cor}
@@ -54,14 +50,16 @@ export default function ProdutosDaCategoriaScreen({ route }) {
     );
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, darkMode && styles.darkContainer]}>
             <FlatList
                 data={produtosFiltrados}
                 keyExtractor={(produto) => produto.id}
                 renderItem={renderProduto}
                 contentContainerStyle={{ padding: 16 }}
                 ListEmptyComponent={
-                    <Text style={styles.textoVazio}>Nenhum produto encontrado nesta categoria.</Text>
+                    <Text style={[styles.textoVazio, darkMode && styles.darkTextSecondary]}>
+                        Nenhum produto encontrado nesta categoria.
+                    </Text>
                 }
             />
         </View>
@@ -73,6 +71,10 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f5f5f5',
     },
+    darkContainer: { backgroundColor: '#121212' },
+    darkProdutoCard: { backgroundColor: '#1E1E1E' },
+    darkText: { color: '#FFFFFF' },
+    darkTextSecondary: { color: '#AAAAAA' },
     produtoCard: {
         flexDirection: 'row',
         backgroundColor: '#fff',

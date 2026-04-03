@@ -4,9 +4,24 @@ import userMock from '../api/usuarioMock/samuelvaleriano@gmail.com.json';
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
-    const [user, setUser] = useState(userMock);
+    const [user, setUser] = useState(null);
 
-    return<UserContext.Provider value={{ user, setUser }}>
+const signIn = (email, password) => {
+    if (email === userMock.email && password === userMock.senha) {
+        setUser(userMock);
+        return true;
+    } else {
+
+        throw new Error('Credenciais inválidas');
+    }
+};
+
+    const signOut = () => {
+        setUser(null);
+    };
+
+
+    return<UserContext.Provider value={{ user, setUser, signIn, signOut }}>
         {children}
     </UserContext.Provider>
 }
