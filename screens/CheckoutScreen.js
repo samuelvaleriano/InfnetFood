@@ -1,7 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { useOrder } from '../context/OrderContext';
 import { ThemeContext } from '../context/ThemeContext'; 
+import { CartContext } from '../context/CardContext';
 
 export default function CheckoutScreen({ route, navigation }) {
 
@@ -15,6 +17,8 @@ export default function CheckoutScreen({ route, navigation }) {
     const [mostrarAviso, setMostrarAviso] = useState(false);
 
     const { darkMode } = useContext(ThemeContext);
+    const { startOrderSimulation } = useOrder();
+    const { finalizarPedido } = useContext(CartContext);
 
     const confirmarPedido = () => {
   
@@ -28,10 +32,12 @@ export default function CheckoutScreen({ route, navigation }) {
             return; 
         }
         setPedidoConfirmado(true);
+        startOrderSimulation();
+        finalizarPedido();
 
         setTimeout(() => {
             setPedidoConfirmado(false);
-            navigation.navigate('HomeTab');
+            navigation.navigate('Main');
         }, 3000);
     };
 

@@ -8,7 +8,7 @@ import {
 import { useState, useContext } from 'react';
 import { useUser } from '../context/UserContext';
 import { ThemeContext } from '../context/ThemeContext';
-import LottieView from 'lottie-react-native'; // <-- Importamos o Lottie para a animação
+import LottieView from 'lottie-react-native'; 
 
 export default function SigninScreen({ navigation }) {
   const [inputEmail, setInputEmail] = useState('');

@@ -10,7 +10,7 @@ import React, { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext'; 
 
 export default function PedidosScreen() {
-    const { cartItems } = useContext(CartContext);
+    const { pedidosRealizados } = useContext(CartContext);
     
     const { darkMode } = useContext(ThemeContext);
 
@@ -32,8 +32,8 @@ export default function PedidosScreen() {
         <View style={[styles.container, darkMode && styles.darkContainer]}>
              <Text style={styles.paragraph}>Pedidos Recente</Text>
             <FlatList
-                data={cartItems}
-                keyExtractor={(item) => item.id}
+                data={pedidosRealizados}
+                keyExtractor={(item) => item.toString()}
                 renderItem={renderCartItem}
                 contentContainerStyle={{ padding: 16 }}
                 ListEmptyComponent={

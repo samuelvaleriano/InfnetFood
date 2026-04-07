@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'; 
+import React, { useContext, useEffect, useState } from 'react';
 import {
     StyleSheet,
     Text,
@@ -6,47 +6,43 @@ import {
     TouchableOpacity,
     FlatList,
     Image,
-    Platform
+    Platform,
+    ActivityIndicator
 } from 'react-native';
 import { Dimensions } from "react-native";
 import { WebView } from 'react-native-webview';
 import { useUser } from '../context/UserContext';
-import { ThemeContext } from '../context/ThemeContext'; 
+import { ThemeContext } from '../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useOrder } from '../context/OrderContext';
 
 const { width } = Dimensions.get('window');
 const itemWidth = width * 0.6;
 const spacing = 16;
 
-const categorias = [
-    {
-        id: "1",
-        nome: "Lanches",
-        imagem: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80",
-        cor: "#ED1C16",
-        corVer: "#BC1611",
-    },
-    {
-        id: "6",
-        nome: "Sobremesas",
-        imagem: "https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80",
-        cor: "#FFB8B8",
-        corVer: "#FF7B7B",
-    },
-    {
-        id: "8",
-        nome: "Bebidas",
-        imagem: "https://images.unsplash.com/photo-1556881286-fc6915169721?auto=format&fit=crop&w=500&q=80",
-        cor: "#009432",
-        corVer: "#06752B",
-    },
-];
 
 export default function HomeScreen({ navigation }) {
     const { user, signOut } = useUser();
-    
-
     const { darkMode } = useContext(ThemeContext);
+    const { activeOrder } = useOrder();
+    const [loading, setLoading] = useState(true);
+    const [categorias, setCategorias] = useState([]);
+
+    useEffect(() => {
+        const url = "https://raw.githubusercontent.com/samuelvaleriano/lanches/refs/heads/main/categorias.json";
+
+        fetch(url)
+            .then(res => res.json())
+            .then(dados => {
+                const filtrados = dados.filter(p => String(p.id));
+                setCategorias(filtrados);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Erro ao carregar JSON:", error);
+                setLoading(false);
+            });
+    }, []);
 
 
     const mapHtml = `
@@ -117,6 +113,14 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
     );
 
+    if (loading) {
+        return (
+          <View style={styles.center}>
+            <ActivityIndicator size="large" color="steelblue" />
+          </View>
+        );
+      }
+
     return (
 
         <View style={[styles.container, darkMode && styles.darkContainer]}>
@@ -136,7 +140,7 @@ export default function HomeScreen({ navigation }) {
                     <Ionicons name="log-out-outline" size={24} color="#FFF" />
                 </TouchableOpacity>
             </View>
-            
+
             <Text style={styles.paragraph}>Categories</Text>
 
             <FlatList
@@ -155,9 +159,9 @@ export default function HomeScreen({ navigation }) {
                     paddingVertical: 10,
                 }}
             />
-            
+
             <Text style={[styles.paragraphMap, darkMode && styles.darkText]}>Restaurantes próximos de Você</Text>
-            
+
             <View style={styles.mapContainer}>
                 {Platform.OS === 'web' ? (
                     <iframe
@@ -184,14 +188,38 @@ export default function HomeScreen({ navigation }) {
                     />
                 )}
             </View>
+            {activeOrder && (
+                <View style={[
+                    styles.statusCard,
+                    { backgroundColor: darkMode ? '#1E1E1E' : '#FFF' }
+                ]}>
+                    <View style={styles.iconCircle}>
+                        <Ionicons
+                            name={activeOrder.status === 'delivered' ? "checkmark-done" : "bicycle"}
+                            size={24}
+                            color="#FFF"
+                        />
+                    </View>
+                    <View style={{ flex: 1, marginLeft: 12 }}>
+                        <Text style={[styles.statusTitle, darkMode && styles.darkText]}>Acompanhando Pedido</Text>
+                        <Text style={styles.statusSub}>
+                            {activeOrder.status === 'pending' && 'Cozinha preparando seu lanche...'}
+                            {activeOrder.status === 'shipped' && 'O entregador está a caminho!'}
+                            {activeOrder.status === 'delivered' && 'Pedido entregue. Bom apetite!'}
+                        </Text>
+                    </View>
+                </View>
+            )}
+
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     container: {
         flex: 1,
-        marginTop: 50, 
+        marginTop: 50,
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -315,4 +343,38 @@ const styles = StyleSheet.create({
         marginBottom: 16,
         marginRight: 15,
     },
+    statusCard: {
+        position: 'absolute',
+        bottom: 30,
+        left: 20,
+        right: 20,
+        padding: 15,
+        borderRadius: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        elevation: 12,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.4,
+        shadowRadius: 8,
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.05)'
+    },
+    iconCircle: {
+        width: 45,
+        height: 45,
+        borderRadius: 22.5,
+        backgroundColor: '#ED1C16',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    statusTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#333'
+    },
+    statusSub: {
+        fontSize: 13,
+        color: '#666'
+    }
 });

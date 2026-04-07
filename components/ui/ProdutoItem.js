@@ -1,4 +1,3 @@
-// Este é o componente isolado. Ele recebe os dados do produto via "props".
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 

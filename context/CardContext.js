@@ -5,6 +5,7 @@ export const CartContext = createContext({});
 
 export function CartProvider({ children }) {
     const [cart, setCart] = useState({});
+    const [pedidosRealizados, setPedidosRealizados] = useState([]);
 
     function adicionar(produto) {
         setCart((prev) => {
@@ -26,11 +27,20 @@ export function CartProvider({ children }) {
             if (novaQuantidade <= 0) {
                 delete novoCart[produtoId];
             } else {
-                novoCart[produtoId].quantidade = novaQuantidade;
+                novoCart[produtoId] = { ...novoCart[produtoId], quantidade: novaQuantidade };
             }
 
             return novoCart;
         });
+    }
+    function finalizarPedido() {
+        const itensNoCarrinho = Object.values(cart);
+        
+        if (itensNoCarrinho.length > 0) {
+            
+            setPedidosRealizados((prev) => [...itensNoCarrinho, ...prev]);
+            setCart({});
+        }
     }
 
     const getQuantidade = (produtoId) => {
@@ -49,8 +59,10 @@ export function CartProvider({ children }) {
     return (
         <CartContext.Provider value={{ 
             cartItems: Object.values(cart), 
+            pedidosRealizados,
             adicionar, 
             remover, 
+            finalizarPedido,
             getQuantidade, 
             getTotal 
         }}>

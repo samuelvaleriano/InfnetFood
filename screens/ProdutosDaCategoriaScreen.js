@@ -1,34 +1,38 @@
-import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity } from 'react-native';
-import { useContext } from 'react';
+import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {  useContext, useEffect, useState } from 'react';
 import ProdutoItem from '../components/ui/ProdutoItem';
 import { CartContext } from '../context/CardContext';
 import { ThemeContext } from '../context/ThemeContext';
 
-const todosOsProdutos = [
-    { id: '101', categoriaId: '1', nome: 'X-Burguer Duplo', preco: 'R$ 25,00', imagem: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80' },
-    { id: '102', categoriaId: '1', nome: 'Batata Frita M', preco: 'R$ 12,00', imagem: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=500&q=80' },
-    { id: '103', categoriaId: '1', nome: 'X-Burguer Duplo', preco: 'R$ 25,00', imagem: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=500&q=80' },
-    { id: '104', categoriaId: '1', nome: 'Batata Frita M', preco: 'R$ 12,00', imagem: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=500&q=80' },
-
-    { id: '105', categoriaId: '6', nome: 'Bolo de Chocolate', preco: 'R$ 18,00', imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80' },
-    { id: '106', categoriaId: '6', nome: 'Pudim de Leite', preco: 'R$ 15,00', imagem: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80' },
-    { id: '107', categoriaId: '6', nome: 'Bolo de Chocolate', preco: 'R$ 18,00', imagem: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=500&q=80' },
-    { id: '108', categoriaId: '6', nome: 'Pudim de Leite', preco: 'R$ 15,00', imagem: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=500&q=80' },
-
-    { id: '109', categoriaId: '8', nome: 'Suco de Laranja', preco: 'R$ 10,00', imagem: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=500&q=80' },
-    { id: '110', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
-    { id: '111', categoriaId: '8', nome: 'Suco de Laranja', preco: 'R$ 10,00', imagem: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=500&q=80' },
-    { id: '112', categoriaId: '8', nome: 'Refrigerante Lata', preco: 'R$ 6,00', imagem: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80' },
-];
 
 export default function ProdutosDaCategoriaScreen({ route }) {
     const { item } = route.params;
     const { adicionar, remover, getQuantidade } = useContext(CartContext);
+    const [loading, setLoading] = useState(true);
     
     const { darkMode } = useContext(ThemeContext); 
+    const [podutos, setProdutos] = useState([]);
 
-    const produtosFiltrados = todosOsProdutos.filter(
-        (produto) => produto.categoriaId === item.id
+    useEffect(() => {
+        const url = "https://raw.githubusercontent.com/samuelvaleriano/lanches/main/lanches.json";
+
+        fetch(url)
+            .then(res => res.json())
+            .then(dados => {
+                const filtrados = dados.filter(p => String(p.categoriaId) === String(item.id));
+                setProdutos(filtrados);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Erro ao carregar JSON:", err);
+                setLoading(false);
+            });
+    }, [item.id]);
+
+    console.log('Produtos da categoria:', podutos);
+
+    const produtosFiltrados = podutos.filter(
+        (prod) => prod.categoriaId === item.id
     );
 
     const renderProduto = ({ item: produto }) => (
@@ -48,6 +52,13 @@ export default function ProdutosDaCategoriaScreen({ route }) {
             </View>
         </View>
     );
+      if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="steelblue" />
+      </View>
+    );
+  }
 
     return (
         <View style={[styles.container, darkMode && styles.darkContainer]}>
@@ -67,6 +78,7 @@ export default function ProdutosDaCategoriaScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
+    center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     container: {
         flex: 1,
         backgroundColor: '#f5f5f5',

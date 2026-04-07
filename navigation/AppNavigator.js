@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'; // <-- 1. Importe o useContext
+import React, { useContext } from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"; 
@@ -15,6 +15,7 @@ import CheckoutScreen from "../screens/CheckoutScreen";
 import Configuracoes from "../screens/Configuracoes";
 import { useUser } from "../context/UserContext";
 import { ThemeContext } from '../context/ThemeContext'; 
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -104,6 +105,8 @@ export default function AppNavigator() {
                             component={CheckoutScreen}
                             options={{ title: 'Finalizar Compra' }}
                         />
+                 
+
                     </>
                 )}
             </Stack.Navigator>
