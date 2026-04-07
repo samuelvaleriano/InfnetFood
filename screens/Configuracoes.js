@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, Switch, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
+import { View, Text, Switch, StyleSheet, ScrollView } from 'react-native';
 import { ThemeContext } from '../context/ThemeContext'; 
 
 export default function Configuracoes() {
